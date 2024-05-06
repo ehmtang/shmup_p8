@@ -4,7 +4,7 @@ function _init()
     clear_log()
     cls()
     music(0)
-    flow_state_manager:set_state(menu_fs)
+    flow_state_manager:set_state(splash_fs)
   
     _global=_ENV --allows global access inside tables
     palt(7, true) -- white color as transparency is true

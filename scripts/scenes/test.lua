@@ -1,38 +1,11 @@
-test_fs=flow_state:new({
-    customers={},
-    cam=camera_obj:new(),
-
-    timer=0,
-    begin=function(_ENV)
-        local new_cust=customer:new()
-        new_cust:init()
-        add(customers, new_cust)
-    end,
-
-    update=function(_ENV)
-        local strop_count=0
-        timer+=1
-        if (timer >= 120) then
-            timer=0
-            local new_cust=customer:new()
-            new_cust:init()
-            add(customers, new_cust)
-        end
-        for i=1, #customers do
-            customers[i]:update()
-            if (customers[i]:get_strop()) then
-                strop_count+=1
-            end
-        end
-
-        cam:set_shake(strop_count*0.2, time()*50.0)
-        cam:update()
-    end,
-
-    draw=function(_ENV)
-        map(0,0,0,0,16,16)
-        for i=1,#customers do
-            customers[i]:draw()
-        end
-    end
+test_fs = level_fs:new({
+    elevator_doors = { { 1, 2 }, {}, {}, { 1, 2 } },
+    allowed_targets = { { 2 }, { 1 }, {}, {} },
+    spawn_rate_0 = 3,
+    spawn_rate_increase_per_wave = 2.0,
+    cat_rate_0 = 0,
+    cat_rate_increase_per_wave = 0.0,
+    time_per_wave = 15.0,
+    time_per_cat_wave = 20.0,
+    title = "level1"
 })

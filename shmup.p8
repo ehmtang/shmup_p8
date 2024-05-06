@@ -1,45 +1,36 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
--- LDjam24
--- @broccolly & @ehmtang 
+
+-- @broccolly & @ehmtang
 
 --⬅️➡️⬆️⬇️ ❎🅾️
 
--- logging
-#include utilities/logoff.lua
+-- game states and objects
+#include scripts/entities/gameobject.lua
+#include scripts/scenes/flowState.lua
+#include scripts/entities/camera.lua
+#include scripts/entities/ui.lua
 
--- game logic
-#include objects/gobj.lua
-#include scenes/flowState.lua
-#include objects/player.lua
-#include objects/elevator.lua
-#include objects/camera.lua
-#include objects/ui.lua
-
--- scenes 
-#include scenes/level.lua
-#include scenes/level1.lua
-#include scenes/level2.lua
-#include scenes/level3.lua
-#include scenes/level4.lua
-#include scenes/menu.lua
+-- scenes
+#include scripts/scenes/level.lua
+#include scripts/scenes/test.lua
+#include scripts/scenes/menu.lua
+#include scripts/scenes/splash.lua
 
 -- entities
-#include scripts/entity.lua
-#include objects/customer.lua
-#include objects/cat.lua
-#include scenes/test.lua
-#include objects/doors.lua
+#include scripts/entities/player.lua
+#include scripts/entities/elevator.lua
+#include scripts/entities/customer.lua
+#include scripts/entities/cat.lua
+#include scripts/entities/doors.lua
 
 -- utilities
-#include utilities/animation.lua
-
--- data
-
+#include scripts/utilities/print_text.lua
+#include scripts/utilities/logon.lua
+#include scripts/utilities/globals.lua
 
 --main
-g=_ENV --allows global access inside tables
 #include scripts/main.lua
 
 __gfx__
