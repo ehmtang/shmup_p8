@@ -1,25 +1,24 @@
 menu_fs = flow_state:new({
-    items = { "level", "test" },
-    scores = { nil, nil },
+    items = { "level1",  "level2", "level3", "level4"},
+    scores= {nil, nil, nil, nil},
     select = 0,
-
+    
     begin = function(_ENV)
-        flowstates = { level_fs, test_fs }
-        select = 0
+        flowstates = {splash_fs}
+        select=0
     end,
 
     update = function(_ENV)
+        if btnp(5) then
+            return splash_fs
+        end
     end,
 
     draw = function(_ENV)
         cls()
-        map(16, 0, 0, 0, 16, 16)
-        ypos = 12
-        xpos = 20
-        rectfill(0, 119, 127, 127, 7)
-
-        local txt = "up/down = navigate | x = select"
-        print_bold(txt, 2, 121, 12, 0)
+        rectfill(0, 119, 127, 127,7)
+        local txt = "press ❎ to start"
+        print(txt, 64 - (#txt * 2), 121, 12)
     end,
 
     finish = function(_ENV)

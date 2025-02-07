@@ -1,4 +1,4 @@
-level_fs = flow_state:new({
+base_level_fs = flow_state:new({
     spawn_rate_0 = 5,
 
     spawn = function(_ENV)

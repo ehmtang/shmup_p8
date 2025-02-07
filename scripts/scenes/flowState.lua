@@ -1,25 +1,29 @@
 -- Definition for generic game objects
-flow_state = {
-    new = function(self, tbl)
-        tbl = tbl or {}
-        setmetatable(tbl, { __index = self })
+flow_state={
+    new=function(self,tbl)
+        tbl=tbl or {}
+        setmetatable(tbl, {__index=self})
         return tbl
     end,
 
-    begin = function(_ENV)
+    begin=function(_ENV)
+
     end,
 
-    update = function(_ENV)
-        -- _ENV in the argument allows internal values to be accessed without "self."
-        return nil  -- Return nil by default, but this can be overridden
+    update=function(_ENV) --_ENV in the argument means internal values in the table are accessed without "self." saving tokens
+        return nil
     end,
 
-    draw = function(_ENV)
+    draw=function(_ENV)
+
     end,
 
-    finish = function(_ENV)
+    finish=function(_ENV)
+
     end
 }
+
+setmetatable(flow_state, {__index=_ENV}) --this makes gives access to globals where needed via index
 
 flow_state_manager = {
     fstate = flow_state:new(),  -- Current state
@@ -28,8 +32,9 @@ flow_state_manager = {
     update_state = function(_ENV)
         -- Allow state transitions based on the current state's update
         new_state = fstate:update()
-        if new_state then
-            --_ENV:set_state(new_state)
+        if (new_state ~= nil) then
+            _ENV:set_state(new_state)
+            new_state = nil
         end
     end,
 

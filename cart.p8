@@ -3,7 +3,7 @@ version 42
 __lua__
 
 -- @ehmtang
-
+--⬅️➡️⬆️⬇️ ❎🅾️
 -- game states and objects
 #include scripts/entities/gameobject.lua
 #include scripts/scenes/flowState.lua
@@ -11,8 +11,8 @@ __lua__
 --#include scripts/entities/ui.lua
 
 -- scenes
---#include scripts/scenes/level.lua
---#include scripts/scenes/menu.lua
+#include scripts/scenes/level.lua
+#include scripts/scenes/menu.lua
 #include scripts/scenes/splash.lua
 
 -- entities
