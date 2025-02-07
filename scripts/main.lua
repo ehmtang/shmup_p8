@@ -1,21 +1,25 @@
---main
-
+-- Main function
 function _init()
-    clear_log()
-    cls()
-    music(0)
+    cls()  -- Clear the screen
+    --music(0)  -- Start playing music (track 0)
+  
+    -- Ensure splash_fs is defined as a flow state before using it
     flow_state_manager:set_state(splash_fs)
   
+    -- Setting transparency behavior for colors (7 = white, 0 = black)
     _global=_ENV --allows global access inside tables
-    palt(7, true) -- white color as transparency is true
-    palt(0, false) -- black color as transparency is false
-end
-    
-function _update()
-    flow_state_manager:update_state()
+
+    --palt(7, true)  -- Make color 7 (white) transparent
+    --palt(0, false)  -- Make color 0 (black) non-transparent
 end
 
+-- Update function (called every frame)
+function _update()
+    flow_state_manager:update_state()  -- Update the current state
+end
+
+-- Draw function (called every frame)
 function _draw()
-    cls()
-    flow_state_manager:draw_state()
+    cls()  -- Clear the screen
+    flow_state_manager:draw_state()  -- Draw the current state
 end
