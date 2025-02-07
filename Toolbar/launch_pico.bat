@@ -1,0 +1,1 @@
+cmd /c start pico8.exe -root_path %~dp0../carts/
