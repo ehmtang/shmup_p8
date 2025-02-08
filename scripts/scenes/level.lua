@@ -25,6 +25,8 @@ level_fs = flow_state:new({
         rectfill(0, 0, 127, 127, 1)
         --ui_obj:draw()
         player:draw()
+
+        
     end
 })
 

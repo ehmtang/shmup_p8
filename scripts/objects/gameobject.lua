@@ -51,7 +51,11 @@ setmetatable(g_obj, { __index = _ENV }) --this makes gives access to globals whe
 
 -- to inherit from this class do this
 
---new_obj=g_obj:new({x=5, update=function(_ENV){
---  x++}})
+--new_obj=g_obj:new({
+--  x=5, 
+--  update=function(_ENV)
+--  {
+--      x++}
+--  })
 
 --for global assignment inside class use
