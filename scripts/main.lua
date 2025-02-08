@@ -6,7 +6,6 @@ function _init()
     -- Ensure splash_fs is defined as a flow state before using it
     flow_state_manager:set_state(splash_fs)
   
-    -- Setting transparency behavior for colors (7 = white, 0 = black)
     _global=_ENV --allows global access inside tables
 
     --palt(7, true)  -- Make color 7 (white) transparent

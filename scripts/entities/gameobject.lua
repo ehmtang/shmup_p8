@@ -1,5 +1,17 @@
 -- definition for generic game objects
 g_obj = {
+    sprite_id = 0,
+    pos_x = 0,
+    pos_y = 0,
+    vel_x = 0,
+    vel_y = 0,
+    acc_x = 0,
+    acc_y = 0,
+    frame = 0,
+    frame_pos = 0,
+    anim_speed = 0,
+    nframes = 0,
+
     new = function(self, tbl)
         tbl = tbl or {}
         setmetatable(tbl, { __index = self })
@@ -10,15 +22,28 @@ g_obj = {
     end,
 
     update = function(_ENV)
-        --_ENV in the argument means internal values in the table are accessed without "self." saving tokens
-        log("draw not implemented for object")
-        --will help id when a gobj update is called when undefined. could be stripped
-        stop("draw not implemented for object")
+        vel_x += acc_x
+        vel_y += acc_y
+        pos_x += vel_x
+        pos_y += vel_y
+
+        _ENV:update_anim()
+    end,
+
+    update_anim = function(_ENV)
+        frame_pos += anim_speed
+        if (frame_pos > 1) then
+            frame += 1
+            frame_pos -= 1
+
+            if frame > nframes then
+                frame = 0
+            end
+        end
     end,
 
     draw = function(_ENV)
-        log("draw not implemented for object")
-        stop("draw not implemented for object")
+        spr(sprite_id + frame, pos_x, pos_y)
     end
 }
 
