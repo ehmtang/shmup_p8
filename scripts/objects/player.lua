@@ -5,7 +5,6 @@ player_obj = g_obj:new({
     vel_decay = 0.05,
     acc_decay = 0.1,
 
-    bullets = {},
     fire_time = 0,
     fire_rate = 0.3,
 
@@ -17,7 +16,7 @@ player_obj = g_obj:new({
 
     muzzle_r = 0,
     muzzle_rmax = 5,
-
+    name = "player",
     init = function(_ENV)
         sprite_id = 2
         pos_x = 0
@@ -34,8 +33,6 @@ player_obj = g_obj:new({
 
         fire_time += g_elapsed_time
 
-        -- Update bullets
-        _ENV:update_bullets()
 
         -- Apply velocity decay when no input is given
         if not (btn(0) or btn(1)) then
@@ -64,11 +61,6 @@ player_obj = g_obj:new({
     end,
 
     draw = function(_ENV)
-        -- draw all bullets
-        for _, bullet in ipairs(bullets) do
-            bullet:draw()
-        end
-
         -- set left, right and idle sprites
         if btn(0) then
             sprite_id = 1
@@ -94,7 +86,9 @@ player_obj = g_obj:new({
         g_obj.draw(_ENV)
 
         -- muzzle flash
-        circfill(pos_x + 3, pos_y - 1, muzzle_r, 7)
+        if muzzle_r ~= 0 then
+            circfill(pos_x + 3, pos_y - 1, muzzle_r, 7)
+        end
     end,
 
     player_ctrls = function(_ENV)
@@ -123,22 +117,13 @@ player_obj = g_obj:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        local bullet = bullet_obj:new({
+        bullet_obj:new({
             pos_x = pos_x,
             pos_y = pos_y - 2,
+            active = 0,
         })
-        add(bullets, bullet)
         muzzle_r = muzzle_rmax
         fire_time = 0
-    end,
-
-    update_bullets = function(_ENV)
-        for i = #bullets, 1, -1 do
-            bullets[i]:update()
-            if bullets[i].pos_y < 0 or bullets[i].pos_y > 128 then
-                deli(bullets, i)
-            end
-        end
     end,
 
     bound_player = function(_ENV)

@@ -4,29 +4,29 @@ level_fs = flow_state:new({
     high_score = 0,
 
     spawn = function(_ENV)
-        local a = 0 -- Ensure 'a' is local if it's not meant to be global
+        local a = 0
     end,
 
     begin = function(_ENV)
         -- Initialize player and UI if required
-        _ENV:spawn()  -- Uncomment if needed
-
-        player = player_obj:new()
-        player:init()
-
-        --ui_obj:init()  -- Uncomment if `ui_obj` needs initialization
+        _ENV:spawn()
+        --player = player_obj:new()
+        --player:init()
     end,
 
     update = function(_ENV)
-        player:update()
+        g_obj_manager:update()
     end,
 
     draw = function(_ENV)
         rectfill(0, 0, 127, 127, 1)
-        --ui_obj:draw()
-        player:draw()
+        g_obj_manager:draw()
 
-        
+
+        -- for i, v in ipairs(g_obj_manager.g_objs) do
+        --     print(i..': '..v.name,7)
+        --   end
+
     end
 })
 

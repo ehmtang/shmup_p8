@@ -3,6 +3,8 @@ camera_obj = g_obj:new({
     y = 0,
     offX = 0,
     offY = 0,
+    name = "cam",
+    
     update = function(_ENV)
         camera(x + offX, y + offY)
     end,

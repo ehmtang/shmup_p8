@@ -14,11 +14,10 @@ end
 
 -- Update function (called every frame)
 function _update()
-    flow_state_manager:update_state()  -- Update the current state
+    flow_state_manager:update_state()
 end
 
 -- Draw function (called every frame)
 function _draw()
-    cls()  -- Clear the screen
     flow_state_manager:draw_state()  -- Draw the current state
 end

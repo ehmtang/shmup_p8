@@ -1,5 +1,5 @@
-g_screen_width = 128;
-g_screen_height = 128;
+g_screen_width = 128
+g_screen_height = 128
 g_elapsed_time = 0.033
 
 --print text with highlights one pixel to the left, right, top and bottom

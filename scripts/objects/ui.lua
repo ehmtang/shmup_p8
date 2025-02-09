@@ -4,6 +4,7 @@ ui_obj = g_obj:new({
     rage = 0,
     max_rage = 5,
     total_score = 0,
+    name="ui",
     init = function(_ENV)
         mult = 1
         total_score = 0

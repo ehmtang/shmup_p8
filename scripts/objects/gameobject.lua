@@ -11,10 +11,13 @@ g_obj = {
     frame_pos = 0,
     anim_speed = 0,
     nframes = 0,
+    name ="",
+    active = true,
 
     new = function(self, tbl)
         tbl = tbl or {}
         setmetatable(tbl, { __index = self })
+        add(g_obj_manager.g_objs, tbl)
         return tbl
     end,
 
@@ -49,6 +52,29 @@ g_obj = {
 
 setmetatable(g_obj, { __index = _ENV }) --this makes gives access to globals where needed via index
 
+g_obj_manager = {
+    g_objs = {},
+
+    update = function(_ENV)
+        foreach(g_objs, function(obj) obj:update() end)
+        _ENV:delete_inactive()
+    end,
+
+    draw = function(_ENV)
+        foreach(g_objs, function(obj) obj:draw() end)
+    end,
+
+    delete_inactive = function(_ENV)
+        for obj in all(g_objs) do
+            if not obj.active then
+                del(g_objs, obj)
+            end
+        end
+    end,
+
+}
+
+setmetatable(g_obj_manager, { __index = _ENV }) -- Allow access to globals if needed
 -- to inherit from this class do this
 
 --new_obj=g_obj:new({
