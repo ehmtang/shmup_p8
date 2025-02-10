@@ -1,23 +1,23 @@
+global = _ENV
+
 -- Main function
 function _init()
-    cls()  -- Clear the screen
-    --music(0)  -- Start playing music (track 0)
-  
-    -- Ensure splash_fs is defined as a flow state before using it
-    flow_state_manager:set_state(splash_fs)
-  
-    _global=_ENV --allows global access inside tables
-
-    --palt(7, true)  -- Make color 7 (white) transparent
-    --palt(0, false)  -- Make color 0 (black) non-transparent
+    cls()
+    flowstate_manager:set_state(splash_fs)
 end
 
--- Update function (called every frame)
+-- Update function
 function _update()
-    flow_state_manager:update_state()
+    g_obj_manager:update()
+    ui_obj:update()
+    flowstate_manager:update_state()
+
 end
 
--- Draw function (called every frame)
+-- Draw function
 function _draw()
-    flow_state_manager:draw_state()  -- Draw the current state
+    cls()
+    g_obj_manager:draw()
+    ui_obj:draw()
+    flowstate_manager:draw_state()
 end

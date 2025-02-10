@@ -1,9 +1,7 @@
-ui_obj = g_obj:new({
+ui_obj = class:new({
     tags = {},
     mult = 1,
-    rage = 0,
-    max_rage = 5,
-    total_score = 0,
+    --score = 0,
     name="ui",
     init = function(_ENV)
         mult = 1
@@ -15,6 +13,8 @@ ui_obj = g_obj:new({
     end,
 
     draw = function(_ENV)
+        print("score: "..level_fs.score,8,8,7)
+
     end,
 
     hit_tag = function(_ENV)

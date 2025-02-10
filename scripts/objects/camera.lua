@@ -1,4 +1,4 @@
-camera_obj = g_obj:new({
+camera_obj = game_object:new({
     x = 0,
     y = 0,
     offX = 0,

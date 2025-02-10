@@ -1,5 +1,18 @@
-player_obj = g_obj:new({
-
+player_obj = game_object:new({
+    sprite_id = 0,
+    pos_x = 0,
+    pos_y = 0,
+    vel_x = 0,
+    vel_y = 0,
+    acc_x = 0,
+    acc_y = 0,
+    frame = 0,
+    frame_pos = 0,
+    anim_speed = 0,
+    nframes = 0,
+    name = "player",
+    active = true,
+    
     max_vel = 1,
 
     vel_decay = 0.05,
@@ -16,8 +29,8 @@ player_obj = g_obj:new({
 
     muzzle_r = 0,
     muzzle_rmax = 5,
-    name = "player",
     init = function(_ENV)
+        stop()
         sprite_id = 2
         pos_x = 0
         pos_y = 0
@@ -57,7 +70,11 @@ player_obj = g_obj:new({
 
         muzzle_r -=1
         muzzle_r = mid(0, muzzle_r, muzzle_rmax)
-        g_obj.update(_ENV)
+
+        vel_x += acc_x
+        vel_y += acc_y
+        pos_x += vel_x
+        pos_y += vel_y
     end,
 
     draw = function(_ENV)
@@ -83,7 +100,7 @@ player_obj = g_obj:new({
         spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
 
         
-        g_obj.draw(_ENV)
+        spr(sprite_id + frame, pos_x, pos_y)
 
         -- muzzle flash
         if muzzle_r ~= 0 then
@@ -117,11 +134,7 @@ player_obj = g_obj:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        bullet_obj:new({
-            pos_x = pos_x,
-            pos_y = pos_y - 2,
-            active = 0,
-        })
+        add(g_obj_manager.g_objs, bullet_obj:new({pos_x = pos_x, pos_y = pos_y - 2}))
         muzzle_r = muzzle_rmax
         fire_time = 0
     end,

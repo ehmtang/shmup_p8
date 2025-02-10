@@ -1,4 +1,4 @@
-menu_fs = flow_state:new({
+menu_fs = flowstate:new({
     levels = { "easy", "normal", "hard" },
     scores = { nil, nil, nil },
     select = 0,
@@ -23,7 +23,7 @@ menu_fs = flow_state:new({
 
     draw = function(_ENV)
         -- fill the center 96x96 portion of the screen
-        rectfill(16, 16, 111, 111, 1)
+        --rectfill(16, 16, 111, 111, 1)
 
         -- Print Texts
         for i = 1, #levels do

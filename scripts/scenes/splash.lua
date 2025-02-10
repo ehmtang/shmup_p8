@@ -1,31 +1,37 @@
 -- Splash Screen
-splash_fs = flow_state:new({
-    select = 0,
-
+splash_fs = flowstate:new({
     begin = function(_ENV)
-        flowstates = { splash_fs }
-        select = 0
-    end,
+        local STAR_COUNT = 50
 
-    update = function(_ENV)
-        if btnp(5) then
-            return menu_fs
+        score = 0
+        stars = {}
+        star_types = { star, near_star, far_star }
+    
+        for i = 1, STAR_COUNT do
+            local star_type = rnd(star_types)
+            add(g_obj_manager.g_objs, star_type:new({ x = rnd(127), y = rnd(127) }))
         end
     end,
 
+    update = function(_ENV)
+        foreach(g_obj_manager.g_objs, function(star) star:update() end)
+        if btnp(5) then
+            return menu_fs
+        end
+
+        return nil
+    end,
+
     draw = function(_ENV)
-        --cls()
+        foreach(g_obj_manager.g_objs, function(star) star:draw() end)
+        print("score: " .. score, 8, 8, 7)
 
-        -- fill the center 96x96 portion of the screen
-        rectfill(16, 16, 111, 111, 1)
-
-        -- Print centered text in color 12
         local txt = "splash screen"
         print(txt, 64 - (#txt * 2), 60, 12)
-
-        -- Print centered text in color 12
         txt = "press ❎ to start"
         print(txt, 64 - (#txt * 2), 68, 12)
+        
+
     end,
 
     finish = function(_ENV)

@@ -1,7 +1,7 @@
-level_fs = flow_state:new({
+level_fs = flowstate:new({
     title = "base",
     spawn_rate_0 = 5,
-    high_score = 0,
+    score = 0,
 
     spawn = function(_ENV)
         local a = 0
@@ -10,7 +10,8 @@ level_fs = flow_state:new({
     begin = function(_ENV)
         -- Initialize player and UI if required
         _ENV:spawn()
-        --player = player_obj:new()
+        local player = player_obj:new()
+        add(g_obj_manager.g_objs, player)
         --player:init()
     end,
 
@@ -19,14 +20,7 @@ level_fs = flow_state:new({
     end,
 
     draw = function(_ENV)
-        rectfill(0, 0, 127, 127, 1)
         g_obj_manager:draw()
-
-
-        -- for i, v in ipairs(g_obj_manager.g_objs) do
-        --     print(i..': '..v.name,7)
-        --   end
-
     end
 })
 
