@@ -4,22 +4,27 @@ level_fs = flowstate:new({
     spawn_rate_0 = 5,
     score = 0,
 
-    spawn = function(_ENV)
-        local a = 0
+    spawn_wave = function(_ENV, x0, y0, row, col)
+        for i = 1, row, 1 do
+            x = x0 + i * 10
+            for j = 1, col, 1 do
+                y = y0 + j * 10
+                add(g_obj_manager.g_objs, enemy_obj:new({ pos_x = x, pos_y = y }))
+            end
+        end
     end,
 
     begin = function(_ENV)
         -- Initialize player and UI if required
-        _ENV:spawn()
+        _ENV:spawn_wave(60, 10, 10, 5)
         add(g_obj_manager.g_objs, player)
         player:init()
     end,
 
     update = function(_ENV)
-        
         if btn(4) and btn(5) then
             player.active = false
-            return gameover_fs    
+            return gameover_fs
         end
 
         if player.lives == 0 then

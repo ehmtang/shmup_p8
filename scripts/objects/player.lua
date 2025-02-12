@@ -12,7 +12,9 @@ player_obj = game_object:new({
     nframes = 0,
     name = "player",
     active = true,
-    
+    rad = 2,
+    off_x = 4,
+    off_y = 4,
     max_vel = 1,
 
     vel_decay = 0.05,
@@ -51,7 +53,7 @@ player_obj = game_object:new({
         nframes = 0
         name = "player"
         active = true
-        max_vel = 1
+        max_vel = 0.6
         vel_decay = 0.05
         acc_decay = 0.1
         fire_time = 0
@@ -95,7 +97,18 @@ player_obj = game_object:new({
             vel_y = nvel_y * max_vel
         end
 
-        muzzle_r -=1
+        -- exhaust animation
+        exh_frame_pos += exh_anim_spd
+        if (exh_frame_pos > 1) then
+            exh_frame += 1
+            exh_frame_pos -= 1
+
+            if exh_frame >= exh_nframes then
+                exh_frame = 0
+            end
+        end
+
+        muzzle_r -= 1
         muzzle_r = mid(0, muzzle_r, muzzle_rmax)
 
         vel_x += acc_x
@@ -114,19 +127,9 @@ player_obj = game_object:new({
             sprite_id = 2
         end
 
-        -- exhaust animation
-        exh_frame_pos += exh_anim_spd
-        if (exh_frame_pos > 1) then
-            exh_frame += 1
-            exh_frame_pos -= 1
+        circfill(pos_x+off_x, pos_y+off_y, rad, 8)
 
-            if exh_frame >= exh_nframes then
-                exh_frame = 0
-            end
-        end
-        spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
-
-        
+        --spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
         spr(sprite_id + frame, pos_x, pos_y)
 
         -- muzzle flash
@@ -161,13 +164,13 @@ player_obj = game_object:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        add(g_obj_manager.g_objs, bullet_obj:new({pos_x = pos_x, pos_y = pos_y - 2}))
+        add(g_obj_manager.g_objs, bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2 }))
         muzzle_r = muzzle_rmax
         fire_time = 0
     end,
 
     bound_player = function(_ENV)
-        pos_x = mid(0, pos_x, g_scrn[1]-8)
-        pos_y = mid(0, pos_y, g_scrn[2]-8)
+        pos_x = mid(0, pos_x, g_scrn[1] - 8)
+        pos_y = mid(0, pos_y, g_scrn[2] - 8)
     end,
 })

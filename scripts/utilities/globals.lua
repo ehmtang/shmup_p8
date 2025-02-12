@@ -54,8 +54,8 @@ function canCollide(objA, objB)
 end
 
 function circleCollide(a, b)
-    local dx = b.pos_x - a.pos_x
-    local dy = b.pos_y - a.pos_y
+    local dx = b.pos_x + b.off_x - a.pos_x + a.off_x
+    local dy = b.pos_y + b.off_y - a.pos_y + a.off_y
     local dsqr = dx * dx + dy * dy
     local radiusSum = b.rad + a.rad
     return dsqr <= radiusSum * radiusSum
