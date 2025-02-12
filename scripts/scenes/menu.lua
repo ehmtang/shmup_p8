@@ -28,10 +28,10 @@ menu_fs = flowstate:new({
         -- Print Texts
         for i = 1, #levels do
             local txt = levels[i]
-            local col = 12
+            local col = 7
             if select == i then
                 txt = txt .. " <"
-                col = 14
+                col = 7
             end
 
             local px = 40                -- Center horizontally

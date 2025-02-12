@@ -12,6 +12,9 @@ bullet_obj = game_object:new({
     nframes = 0,
     name ="bullet",
     active = true,
+    
+    layer = LAYER_PLAYER_BULLET, 
+    mask = LAYER_ENEMY,
 
     update = function(_ENV)
         if pos_y < 0 or pos_y > 128 then
@@ -27,4 +30,9 @@ bullet_obj = game_object:new({
     draw = function(_ENV)
         spr(sprite_id + frame, pos_x, pos_y)
     end,
+})
+
+e_bullet_obj = bullet_obj:new({
+    layer = LAYER_ENEMY_BULLET, 
+    mask = LAYER_PLAYER,
 })

@@ -8,10 +8,10 @@ end
 
 -- Update function
 function _update()
+    g_time += g_dt
     g_obj_manager:update()
     ui_obj:update()
     flowstate_manager:update_state()
-
 end
 
 -- Draw function

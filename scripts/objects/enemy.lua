@@ -1,4 +1,4 @@
-player_obj = game_object:new({
+enemy_obj = game_object:new({
     sprite_id = 2,
     pos_x = 64,
     pos_y = 80,
@@ -10,7 +10,7 @@ player_obj = game_object:new({
     frame_pos = 0,
     anim_speed = 0,
     nframes = 0,
-    name = "player",
+    name = "enemy",
     active = true,
     
     max_vel = 1,
@@ -21,51 +21,11 @@ player_obj = game_object:new({
     fire_time = 0,
     fire_rate = 0.3,
 
-    exh_spr_id = 5,
-    exh_anim_spd = 0.8,
-    exh_frame = 0,
-    exh_frame_pos = 0,
-    exh_nframes = 5,
-
-    muzzle_r = 0,
-    muzzle_rmax = 5,
-
-    lives = 4,
-    full_heart_spr = 14,
-    empty_heart_spr = 15,
-
-    layer = LAYER_PLAYER,
-    mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET),
+    layer = LAYER_ENEMY, 
+    mask = LAYER_PLAYER | LAYER_PLAYER_BULLET,
 
     init = function(_ENV)
-        sprite_id = 2
-        pos_x = 64
-        pos_y = 80
-        vel_x = 0
-        vel_y = 0
-        acc_x = 0
-        acc_y = 0
-        frame = 0
-        frame_pos = 0
-        anim_speed = 0
-        nframes = 0
-        name = "player"
-        active = true
-        max_vel = 1
-        vel_decay = 0.05
-        acc_decay = 0.1
-        fire_time = 0
-        fire_rate = 0.3
-        exh_spr_id = 5
-        exh_anim_spd = 0.8
-        exh_frame = 0
-        exh_frame_pos = 0
-        exh_nframes = 5
-        muzzle_r = 0
-        muzzle_rmax = 5
-        lives = 4
-        full_heart_spr = 14
-        empty_heart_spr = 15
+
     end,
 
     update = function(_ENV)
