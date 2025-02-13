@@ -12,9 +12,17 @@ player_obj = game_object:new({
     nframes = 0,
     name = "player",
     active = true,
-    rad = 2,
+
+    rad = 10,
     off_x = 4,
     off_y = 4,
+    
+    spr_x = 0,
+    spr_y = 0,
+    spr_w = 8,
+    spr_h = 8,
+
+
     max_vel = 1,
 
     vel_decay = 0.05,
@@ -90,6 +98,11 @@ player_obj = game_object:new({
             end
         end
 
+
+       _ENV:resolve_collision()
+
+
+
         -- clamp velocities
         if ssqr(vel_x, vel_y) > max_vel * max_vel then
             local nvel_x, nvel_y = norm(vel_x, vel_y)
@@ -108,9 +121,11 @@ player_obj = game_object:new({
             end
         end
 
+        -- update muzzle
         muzzle_r -= 1
         muzzle_r = mid(0, muzzle_r, muzzle_rmax)
 
+        -- update physics
         vel_x += acc_x
         vel_y += acc_y
         pos_x += vel_x
@@ -127,9 +142,11 @@ player_obj = game_object:new({
             sprite_id = 2
         end
 
-        circfill(pos_x+off_x, pos_y+off_y, rad, 8)
+        spr_x = pos_x
+        spr_y = pos_y
+        rectfill( spr_x, spr_y, spr_x + spr_w, spr_y+spr_h, 8 )
 
-        --spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
+        spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
         spr(sprite_id + frame, pos_x, pos_y)
 
         -- muzzle flash
@@ -173,4 +190,34 @@ player_obj = game_object:new({
         pos_x = mid(0, pos_x, g_scrn[1] - 8)
         pos_y = mid(0, pos_y, g_scrn[2] - 8)
     end,
+
+    resolve_collision = function(_ENV)
+        local collisions = {}
+        for i = 1, #g_obj_manager.g_objs do
+            local g_obj = g_obj_manager.g_objs[i]
+        
+            -- Filter and check for collision in one pass
+            if g_obj.layer and g_obj.active and canCollide(mask, g_obj.layer) and aabb_intersect(_ENV, g_obj) then
+                add(collisions, g_obj)
+            end
+        end
+
+        for i = 1, #collisions do
+            local g_obj = collisions[i]
+            local l = g_obj.layer
+
+            -- collision with enemy
+            if l == LAYER_ENEMY then
+                stop("collision detected")
+                g_obj.lives -= 1
+                lives -= 1
+
+            -- collision with enemy bullets
+            elseif l == LAYER_ENEMY_BULLET then
+                g_obj.active = false
+                lives -= 1
+            end
+        end
+    end,
+
 })

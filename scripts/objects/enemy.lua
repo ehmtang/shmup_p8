@@ -18,9 +18,13 @@ enemy_obj = game_object:new({
     nframes = 4,
     name = "enemy",
     active = true,
-    rad = 2,
+    rad = 10,
     off_x = 4,
     off_y = 4,
+    spr_x = 0,
+    spr_y = 0,
+    spr_w = 8,
+    spr_h = 8,
 
     max_vel = 1,
 
@@ -34,7 +38,7 @@ enemy_obj = game_object:new({
     layer = LAYER_ENEMY,
     mask = LAYER_PLAYER | LAYER_PLAYER_BULLET,
 
-    pattern = DEFAULT, 
+    pattern = DEFAULT,
 
     init = function(_ENV)
 
@@ -61,6 +65,10 @@ enemy_obj = game_object:new({
             end
         end
 
+        if lives <= 0 then
+            active = false
+        end
+
         vel_x += acc_x
         vel_y += acc_y
         pos_x += vel_x
@@ -68,7 +76,10 @@ enemy_obj = game_object:new({
     end,
 
     draw = function(_ENV)
-        circfill(pos_x+off_x, pos_y+off_y, rad, 8)
+        spr_x = pos_x
+        spr_y = pos_y
+        rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
+
         spr(sprite_id + frame, pos_x, pos_y)
     end,
 

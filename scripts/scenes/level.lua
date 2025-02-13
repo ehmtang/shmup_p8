@@ -16,18 +16,13 @@ level_fs = flowstate:new({
 
     begin = function(_ENV)
         -- Initialize player and UI if required
-        _ENV:spawn_wave(60, 10, 10, 5)
+        _ENV:spawn_wave(60, 10, 4, 1)
         add(g_obj_manager.g_objs, player)
         player:init()
     end,
 
     update = function(_ENV)
-        if btn(4) and btn(5) then
-            player.active = false
-            return gameover_fs
-        end
-
-        if player.lives == 0 then
+        if player.lives <= 0 then
             player.active = false
             return gameover_fs
         end

@@ -12,9 +12,13 @@ bullet_obj = game_object:new({
     nframes = 0,
     name ="bullet",
     active = true,
-    rad = 2,
-    off_x = 3,
-    off_y = 3,
+    rad = 3,
+    off_x = 0,
+    off_y = 0,
+    spr_x = 0,
+    spr_y = 0,
+    spr_w = 0,
+    spr_h = 0,
     
     layer = LAYER_PLAYER_BULLET,
     mask = LAYER_ENEMY,
@@ -31,7 +35,7 @@ bullet_obj = game_object:new({
     end,
 
     draw = function(_ENV)
-        circfill(pos_x+3, pos_y+3, rad, 8)
+        circfill(pos_x+off_x, pos_y+off_y, rad, 8)
         spr(sprite_id + frame, pos_x, pos_y)
     end,
 })

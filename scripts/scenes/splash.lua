@@ -1,7 +1,7 @@
 -- Splash Screen
 splash_fs = flowstate:new({
     begin = function(_ENV)
-        local n_stars = 20
+        local n_stars = 0
         local star_types = { star, near_star, far_star }
     
         for i = 1, n_stars do

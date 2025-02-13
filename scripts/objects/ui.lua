@@ -13,7 +13,14 @@ ui_obj = class:new({
     end,
 
     draw = function(_ENV)
-        print("score: " .. level_fs.score, 0, 1, 7)
+
+        for index, value in ipairs(g_obj_manager.g_objs) do
+            print(index..": "..value.name)
+            
+        end
+
+
+        --print("score: " .. level_fs.score, 0, 1, 7)
         for i = 1, 4 do
             if level_fs.player.lives >= i then
                 spr(level_fs.player.full_heart_spr, g_scrn[1] - i * 9, 1)
