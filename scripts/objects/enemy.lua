@@ -3,9 +3,8 @@ HOMING = 1
 SINE_WAVE = 2
 TELEPORT = 3
 
-
 enemy_obj = game_object:new({
-    sprite_id = 21,
+    spr_id = 21,
     pos_x = 0,
     pos_y = 0,
     vel_x = 0,
@@ -19,8 +18,6 @@ enemy_obj = game_object:new({
     name = "enemy",
     active = true,
     rad = 10,
-    off_x = 4,
-    off_y = 4,
     spr_x = 0,
     spr_y = 0,
     spr_w = 8,
@@ -69,10 +66,18 @@ enemy_obj = game_object:new({
             active = false
         end
 
+        
+        -- update spr pos
+        spr_x = pos_x
+        spr_y = pos_y
+        
+        -- update physics
         vel_x += acc_x
         vel_y += acc_y
         pos_x += vel_x
         pos_y += vel_y
+
+        _ENV:resolve_collision()
     end,
 
     draw = function(_ENV)
@@ -80,7 +85,7 @@ enemy_obj = game_object:new({
         spr_y = pos_y
         rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
 
-        spr(sprite_id + frame, pos_x, pos_y)
+        spr(spr_id + frame, pos_x, pos_y)
     end,
 
     shoot_bullet = function(_ENV)
@@ -89,4 +94,26 @@ enemy_obj = game_object:new({
         fire_time = 0
     end,
 
+    resolve_collision = function(_ENV)
+        local collisions = {}
+        for i = 1, #g_obj_manager.g_objs do
+            local g_obj = g_obj_manager.g_objs[i]
+        
+            -- Filter and check for collision in one pass
+            if g_obj.layer and g_obj.active and canCollide(mask, g_obj.layer) and aabb_intersect(_ENV, g_obj) then
+                add(collisions, g_obj)
+            end
+        end
+
+        for i = 1, #collisions do
+            local g_obj = collisions[i]
+            local l = g_obj.layer
+
+            -- collision with enemy bullets
+            if l == LAYER_PLAYER_BULLET then
+                g_obj.active = false
+                lives -= 1
+            end
+        end
+    end,
 })

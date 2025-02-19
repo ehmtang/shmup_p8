@@ -5,15 +5,15 @@ star = game_object:new({
     clr = 7,
 
     update = function(_ENV)
-        y += spd
+        pos_y += spd
 
-        if y - rad > 137 then
-            y = -rad
+        if pos_y - rad > 137 then
+            pos_y = -rad
         end
     end,
 
     draw = function(_ENV)
-        circfill(x, y, rad, clr)
+        circfill(pos_x, pos_y, rad, clr)
     end
 })
 

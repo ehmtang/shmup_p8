@@ -1,5 +1,5 @@
 player_obj = game_object:new({
-    sprite_id = 2,
+    spr_id = 2,
     pos_x = 64,
     pos_y = 80,
     vel_x = 0,
@@ -48,7 +48,7 @@ player_obj = game_object:new({
     mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET),
 
     init = function(_ENV)
-        sprite_id = 2
+        spr_id = 2
         pos_x = 64
         pos_y = 80
         vel_x = 0
@@ -99,7 +99,6 @@ player_obj = game_object:new({
         end
 
 
-       _ENV:resolve_collision()
 
 
 
@@ -125,29 +124,35 @@ player_obj = game_object:new({
         muzzle_r -= 1
         muzzle_r = mid(0, muzzle_r, muzzle_rmax)
 
+
+        -- update spr pos
+        spr_x = pos_x
+        spr_y = pos_y
+
         -- update physics
         vel_x += acc_x
         vel_y += acc_y
         pos_x += vel_x
         pos_y += vel_y
+        
+       _ENV:resolve_collision()
+
     end,
 
     draw = function(_ENV)
         -- set left, right and idle sprites
         if btn(0) then
-            sprite_id = 1
+            spr_id = 1
         elseif btn(1) then
-            sprite_id = 3
+            spr_id = 3
         else
-            sprite_id = 2
+            spr_id = 2
         end
 
-        spr_x = pos_x
-        spr_y = pos_y
         rectfill( spr_x, spr_y, spr_x + spr_w, spr_y+spr_h, 8 )
 
         spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
-        spr(sprite_id + frame, pos_x, pos_y)
+        spr(spr_id + frame, pos_x, pos_y)
 
         -- muzzle flash
         if muzzle_r ~= 0 then

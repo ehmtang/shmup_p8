@@ -6,7 +6,7 @@ splash_fs = flowstate:new({
     
         for i = 1, n_stars do
             local star_type = rnd(star_types)
-            add(g_obj_manager.g_objs, star_type:new({ x = rnd(127), y = rnd(127) }))
+            add(g_obj_manager.g_objs, star_type:new({ pos_x = rnd(127), pos_y = rnd(127) }))
         end
     end,
 
