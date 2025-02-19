@@ -14,10 +14,10 @@ ui_obj = class:new({
 
     draw = function(_ENV)
 
-        for index, value in ipairs(g_obj_manager.g_objs) do
-            print(index..": "..value.name)
+        -- for index, value in ipairs(g_obj_manager.g_objs) do
+        --     print(index..": "..value.name)
             
-        end
+        -- end
 
 
         --print("score: " .. level_fs.score, 0, 1, 7)

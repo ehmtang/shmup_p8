@@ -22,9 +22,6 @@ menu_fs = flowstate:new({
     end,
 
     draw = function(_ENV)
-        -- fill the center 96x96 portion of the screen
-        --rectfill(16, 16, 111, 111, 1)
-
         -- Print Texts
         for i = 1, #levels do
             local txt = levels[i]

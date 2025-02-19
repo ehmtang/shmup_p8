@@ -18,7 +18,7 @@ bullet_obj = game_object:new({
 
         -- update spr pos
         spr_x = pos_x + 2
-        spr_y = pos_y + 2
+        spr_y = pos_y +2
 
         -- update physics
         vel_x += acc_x
