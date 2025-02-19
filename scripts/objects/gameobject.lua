@@ -4,6 +4,12 @@ class = setmetatable(
         new = function(_ENV, tbl)
             tbl = tbl or {}
             setmetatable(tbl, { __index = _ENV })
+
+            -- Call init() if it exists
+            if tbl.init then
+                tbl:init()
+            end
+
             return tbl
         end,
         init = function() end
@@ -12,10 +18,29 @@ class = setmetatable(
 
 -- Base gameobject class
 game_object = class:new({
-    x = 0,
-    y = 0,
-
+    spr_id = 0,
+    pos_x = 0,
+    pos_y = 0,
+    vel_x = 0,
+    vel_y = 0,
+    acc_x = 0,
+    acc_y = 0,
+    frame = 0,
+    frame_pos = 0,
+    anim_speed = 0,
+    nframes = 0,
+    name = "",
     active = true,
+
+    rad = 0,
+    
+    spr_x = 0,
+    spr_y = 0,
+    spr_w = 0,
+    spr_h = 0,
+
+    layer = 0,
+    mask = 0,
 
     init = function(_ENV)
     end,

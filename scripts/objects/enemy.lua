@@ -4,25 +4,7 @@ SINE_WAVE = 2
 TELEPORT = 3
 
 enemy_obj = game_object:new({
-    spr_id = 21,
-    pos_x = 0,
-    pos_y = 0,
-    vel_x = 0,
-    vel_y = 0,
-    acc_x = 0,
-    acc_y = 0,
-    frame = 0,
-    frame_pos = 0,
-    anim_spd = 0.2,
-    nframes = 4,
-    name = "enemy",
-    active = true,
-    rad = 10,
-    spr_x = 0,
-    spr_y = 0,
-    spr_w = 8,
-    spr_h = 8,
-
+ 
     max_vel = 1,
 
     vel_decay = 0.05,
@@ -32,13 +14,19 @@ enemy_obj = game_object:new({
     fire_rate = 0.3,
     lives = 1,
 
-    layer = LAYER_ENEMY,
-    mask = LAYER_PLAYER | LAYER_PLAYER_BULLET,
-
     pattern = DEFAULT,
 
     init = function(_ENV)
-
+        game_object:init()
+        spr_id = 21
+        anim_spd = 0.2
+        nframes = 4
+        name = "enemy"
+        rad = 10
+        spr_w = 8
+        spr_h = 8
+        layer = LAYER_ENEMY
+        mask = LAYER_PLAYER | LAYER_PLAYER_BULLET
     end,
 
     update = function(_ENV)
