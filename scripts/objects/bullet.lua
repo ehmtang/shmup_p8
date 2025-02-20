@@ -28,7 +28,7 @@ bullet_obj = game_object:new({
     end,
 
     draw = function(_ENV)
-        rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
+        --rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
         spr(spr_id + frame, pos_x, pos_y)
     end,
 })

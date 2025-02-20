@@ -16,7 +16,7 @@ end
 
 -- Draw function
 function _draw()
-    cls()
+    cls(1)
     g_obj_manager:draw()
     ui_obj:draw()
     flowstate_manager:draw_state()

@@ -120,7 +120,7 @@ player_obj = game_object:new({
             spr_id = 2
         end
 
-        rectfill( spr_x, spr_y, spr_x + spr_w, spr_y+spr_h, 8 )
+        --rectfill( spr_x, spr_y, spr_x + spr_w, spr_y+spr_h, 8 )
 
         spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
         spr(spr_id + frame, pos_x, pos_y)
@@ -184,12 +184,13 @@ player_obj = game_object:new({
 
             -- collision with enemy
             if l == LAYER_ENEMY then
-                stop("collision detected")
+                sfx(1)
                 g_obj.lives -= 1
                 lives -= 1
 
             -- collision with enemy bullets
             elseif l == LAYER_ENEMY_BULLET then
+                sfx(1)
                 g_obj.active = false
                 lives -= 1
             end

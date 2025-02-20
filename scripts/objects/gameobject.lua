@@ -52,17 +52,53 @@ game_object = class:new({
     end
 })
 
+particle_object = game_object:new({
+    
+    clr = 0,
+    age = 0,
+    max_age = 30,
+    rad_inc = 0,
+
+    update = function(_ENV)
+
+        rad += rad_inc
+
+        age += 1
+        if age > max_age then
+            active = false
+        end
+
+        -- update physics
+        vel_x += acc_x
+        vel_y += acc_y
+        pos_x += vel_x
+        pos_y += vel_y
+end,
+
+    draw = function (_ENV)
+        if clear then
+            circ(pos_x, pos_y, rad, clr)
+        else
+            circfill(pos_x, pos_y, rad, clr)
+        end
+    end
+})
+
+
 
 g_obj_manager = class:new({
     g_objs = {},
+    p_objs = {},
 
     update = function(_ENV)
         _ENV:delete_inactive()
         foreach(g_objs, function(obj) obj:update() end)
+        foreach(p_objs, function(obj) obj:update() end)
     end,
 
     draw = function(_ENV)
         foreach(g_objs, function(obj) obj:draw() end)
+        foreach(p_objs, function(obj) obj:draw() end)
     end,
 
     delete_inactive = function(_ENV)
@@ -71,5 +107,12 @@ g_obj_manager = class:new({
                 del(g_objs, obj)
             end
         end
+
+        for obj in all(p_objs) do
+            if not obj.active then
+                del(p_objs, obj)
+            end
+        end
+
     end,
 })
