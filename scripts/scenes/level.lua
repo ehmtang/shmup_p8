@@ -1,37 +1,124 @@
+LVL_ENTER = 0
+LVL_PLAY = 1
+
 level_fs = flowstate:new({
     title = "base",
     player = player_obj:new(),
     spawn_rate_0 = 5,
     score = 0,
+    n_wave = 1,
+    state = LVL_ENTER,
+    enter_time = 0,
+    wave_queue = {},
+    timer_between_waves = 0,
+    wave_queue_idx = 0,
+
+
+    add_wave = function(_ENV, x, y, rows, cols)
+        add(wave_queue, { x, y, rows, cols })
+    end,
 
     spawn_wave = function(_ENV, x0, y0, row, col)
         for i = 1, row, 1 do
             x = x0 + i * 10
             for j = 1, col, 1 do
                 y = y0 + j * 10
-                add(g_obj_manager.g_objs, enemy_obj:new({ pos_x = x, pos_y = y }))
+                add(g_obj_manager.g_objs, enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave }))
             end
         end
     end,
 
+    generate_wave_queue = function(_ENV)
+        -- Add different waves
+        _ENV:add_wave(10, 10, 3, 3)
+        _ENV:add_wave(20, 20, 4, 4)
+        _ENV:add_wave(30, 30, 5, 5)
+    end,
+
+    is_ready = function(_ENV)
+        local live_enemies = {}
+
+        for obj in all(g_obj_manager.g_objs) do
+            if obj.layer == LAYER_ENEMY then
+                add(live_enemies, obj)
+            end
+        end
+
+        -- Check if any enemies with the current wave number are still active
+        for obj in all(live_enemies) do
+            if obj.n_wave == n_wave and obj.active then
+                return false -- Enemies still exist, not ready for the next wave
+            end
+        end
+        return true -- All enemies defeated, ready for next wave
+    end,
+
     begin = function(_ENV)
         -- Initialize player and UI if required
-        _ENV:spawn_wave(60, 10, 4, 1)
+        state = LVL_ENTER
         add(g_obj_manager.g_objs, player)
         player:init()
     end,
 
     update = function(_ENV)
-        if player.lives <= 0 then
-            player.active = false
-            return gameover_fs
-        end
+        -- Enter state: Wait before starting waves
+        if state == LVL_ENTER then
+            enter_time += g_dt
 
-        g_obj_manager:update()
+            -- Move to play state after 3 seconds
+            if enter_time > 3 then
+                enter_time = 0
+                state = LVL_PLAY
+                _ENV:generate_wave_queue()
+            end
+
+
+            -- Play state: Spawn waves at intervals
+        elseif state == LVL_PLAY then
+            timer_between_waves += g_dt
+
+            -- Check if all waves have been spawned
+            if wave_queue_idx >= #wave_queue then
+                n_wave += 1
+                state = LVL_ENTER
+                wave_queue = {}    -- Clear previous wave queue
+                wave_queue_idx = 0 -- Reset index
+                return
+            elseif _ENV:is_ready() then
+                wave_queue_idx += 1
+                local wave_desc = wave_queue[wave_queue_idx]
+                _ENV:spawn_wave(wave_desc[1], wave_desc[2], wave_desc[3], wave_desc[4])
+            end
+
+            -- Go to Game Over flowstate
+            if player.lives <= 0 then
+                player.active = false
+                return gameover_fs
+            end
+        end
     end,
 
     draw = function(_ENV)
-        g_obj_manager:draw()
+        -- Enter state: Draw wave number
+        if state == LVL_ENTER then
+            txt = "wave " .. n_wave
+            print(txt, 64 - (#txt * 2), 40, blink(7, 0))
+
+            -- Play state: Draw
+        elseif state == LVL_PLAY then
+
+        end
+
+        -- Draw regardless of state
+        print("score: " .. level_fs.score, 1, 1, 7)
+
+        for i = 1, 4 do
+            if level_fs.player.lives >= i then
+                spr(level_fs.player.full_heart_spr, g_scrn[1] - i * 9, 1)
+            else
+                spr(level_fs.player.empty_heart_spr, g_scrn[1] - i * 9, 1)
+            end
+        end
     end
 })
 

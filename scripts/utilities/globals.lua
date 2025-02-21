@@ -1,13 +1,7 @@
 g_scrn              = { 128, 128 } -- screen size
-g_dt                = 0.033 --delta time
-g_time              = 0 --total time
-g_blink             = 1 -- txt blink increment
-
--- Define collision layers using bit flags
-LAYER_PLAYER        = 0x01 -- 0001 (bit 0)
-LAYER_ENEMY         = 0x02 -- 0010 (bit 1)
-LAYER_PLAYER_BULLET = 0x04 -- 0100 (bit 2)
-LAYER_ENEMY_BULLET  = 0x08 -- 1000 (bit 3)
+g_dt                = 0.033        --delta time
+g_time              = 0            --total time
+g_blink             = 1            -- txt blink increment
 
 function print_bold(text, x, y)
     print(text, x, y - 1, 7)
@@ -46,7 +40,11 @@ end
 
 function norm(x, y)
     local len_sq = ssqr(x, y)
-    return len_sq > 0 and (x / sqrt(len_sq)), (y / sqrt(len_sq)) or 0, 0
+    if len_sq > 0 then
+        return x / sqrt(len_sq), y / sqrt(len_sq)
+    else
+        return 0, 0
+    end
 end
 
 -- Check first object's mask with second object's layer

@@ -11,7 +11,6 @@ splash_fs = flowstate:new({
     end,
 
     update = function(_ENV)
-        global.g_blink += 1
 
         if btnp(5) then
             return menu_fs

@@ -1,11 +1,10 @@
 player_obj = game_object:new({
-    max_vel = 1,
+    max_spd = 2,
 
-    vel_decay = 0.05,
-    acc_decay = 0.1,
+    acc_rate = 0.2,
 
     fire_time = 0,
-    fire_rate = 0.3,
+    fire_period = 0.05,
 
     exh_spr_id = 5,
     exh_anim_spd = 0.8,
@@ -31,12 +30,11 @@ player_obj = game_object:new({
         spr_h = 8
         active = true
         max_vel = 0.6
-        vel_decay = 0.05
-        acc_decay = 0.1
+        vel_decay = 0.1
         fire_time = 0
-        fire_rate = 0.3
+        fire_rate = 0.6
         exh_spr_id = 5
-        exh_anim_spd = 0.8
+        exh_anim_spd = 1.6
         exh_frame = 0
         exh_frame_pos = 0
         exh_nframes = 5
@@ -57,14 +55,14 @@ player_obj = game_object:new({
 
         -- Apply velocity decay when no input is given
         if not (btn(0) or btn(1)) then
-            vel_x -= vel_decay * sign(vel_x)
-            if abs(vel_x) < 0.01 then
+            vel_x -= acc_rate * sign(vel_x)
+            if abs(vel_x) < 0.1 then
                 vel_x = 0
             end
         end
         if not (btn(2) or btn(3)) then
-            vel_y -= vel_decay * sign(vel_y)
-            if abs(vel_y) < 0.01 then
+            vel_y -= acc_rate * sign(vel_y)
+            if abs(vel_y) < 0.1 then
                 vel_y = 0
             end
         end
@@ -74,10 +72,10 @@ player_obj = game_object:new({
 
 
         -- clamp velocities
-        if ssqr(vel_x, vel_y) > max_vel * max_vel then
+        if ssqr(vel_x, vel_y) > max_spd * max_spd then
             local nvel_x, nvel_y = norm(vel_x, vel_y)
-            vel_x = nvel_x * max_vel
-            vel_y = nvel_y * max_vel
+            vel_x = nvel_x * max_spd
+            vel_y = nvel_y * max_spd
         end
 
         -- exhaust animation
@@ -132,24 +130,26 @@ player_obj = game_object:new({
     end,
 
     player_ctrls = function(_ENV)
+        acc_x = 0
+        acc_y = 0
+
         if btn(0) then
             acc_x = -1 -- Move left
         elseif btn(1) then
             acc_x = 1  -- Move right
-        else
-            acc_x = 0
         end
 
         if btn(2) then
             acc_y = -1 -- Move up
         elseif btn(3) then
             acc_y = 1  -- Move down
-        else
-            acc_y = 0
         end
 
+        acc_x, acc_y = norm(acc_x, acc_y)
+
+
         if btn(4) then
-            if fire_time > fire_rate then
+            if fire_time > fire_period then
                 _ENV:shoot_bullet()
             end
         end
@@ -157,7 +157,7 @@ player_obj = game_object:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        add(g_obj_manager.g_objs, bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2, vel_y = -2 }))
+        add(g_obj_manager.g_objs, bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2, vel_y = -6 }))
         muzzle_r = muzzle_rmax
         fire_time = 0
     end,

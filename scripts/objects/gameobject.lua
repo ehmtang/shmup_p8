@@ -16,6 +16,12 @@ class = setmetatable(
     }, { __index = _ENV }
 )
 
+-- Define collision layers using bit flags
+LAYER_PLAYER        = 0x01 -- 0001 (bit 0)
+LAYER_ENEMY         = 0x02 -- 0010 (bit 1)
+LAYER_PLAYER_BULLET = 0x04 -- 0100 (bit 2)
+LAYER_ENEMY_BULLET  = 0x08 -- 1000 (bit 3)
+
 -- Base gameobject class
 game_object = class:new({
     spr_id = 0,

@@ -9,8 +9,8 @@ end
 -- Update function
 function _update()
     g_time += g_dt
+    global.g_blink += 1
     g_obj_manager:update()
-    ui_obj:update()
     flowstate_manager:update_state()
 end
 
@@ -18,6 +18,5 @@ end
 function _draw()
     cls(1)
     g_obj_manager:draw()
-    ui_obj:draw()
     flowstate_manager:draw_state()
 end

@@ -11,7 +11,6 @@ __lua__
 #include scripts/objects/gameobject.lua
 #include scripts/scenes/flowstate.lua
 #include scripts/objects/camera.lua
-#include scripts/objects/ui.lua
 #include scripts/objects/bullet.lua
 #include scripts/objects/player.lua
 #include scripts/objects/enemy.lua

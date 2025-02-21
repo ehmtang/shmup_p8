@@ -6,6 +6,7 @@ TELEPORT = 3
 enemy_obj = game_object:new({
 
     max_vel = 1,
+    n_wave = 0,
 
     vel_decay = 0.05,
     acc_decay = 0.1,
