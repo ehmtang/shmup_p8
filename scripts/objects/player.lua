@@ -19,6 +19,9 @@ player_obj = game_object:new({
     full_heart_spr = 14,
     empty_heart_spr = 15,
 
+    is_hit = false,
+    invulerable_time = 30,
+
     init = function(_ENV)
         game_object:init()
         spr_id = 2
@@ -43,6 +46,8 @@ player_obj = game_object:new({
         lives = 4
         full_heart_spr = 14
         empty_heart_spr = 15
+        is_hit = false
+        invulerable_time = 30
         layer = LAYER_PLAYER
         mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET)
     end,
@@ -68,7 +73,16 @@ player_obj = game_object:new({
         end
 
 
+        if is_hit then
+            invulerable_time -= 1
+            mask = 0
 
+            if invulerable_time <= 0 then
+               is_hit = false
+               mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET)
+               invulerable_time = 30
+            end
+        end
 
 
         -- clamp velocities
@@ -183,17 +197,46 @@ player_obj = game_object:new({
             local l = g_obj.layer
 
             -- collision with enemy
-            if l == LAYER_ENEMY then
+            if l == LAYER_ENEMY and not is_hit then
                 sfx(1)
                 g_obj.lives -= 1
                 lives -= 1
+                is_hit = true
 
             -- collision with enemy bullets
-            elseif l == LAYER_ENEMY_BULLET then
+            elseif l == LAYER_ENEMY_BULLET and not is_hit then
                 sfx(1)
                 g_obj.active = false
                 lives -= 1
+                is_hit = true
             end
+
+            camera_obj:set_shake(0.5, 0.5)
+
+            -- spark particles
+            for i = 1, 5 + rnd(5) do
+                local particle = particle_object:new({
+                    pos_x = pos_x + 4,
+                    pos_y = pos_y + 4,
+                    vel_x = rnd() - 0.5,
+                    vel_y = rnd() - 0.5,
+                    clr = 7,
+                    rad = 0,
+                })
+                add(g_obj_manager.p_objs, particle)
+            end
+
+            -- shockwave particle
+            local particle = particle_object:new({
+                pos_x = pos_x + 4,
+                pos_y = pos_y + 4,
+                clr = 7,
+                rad = 1 + rnd(2),
+                rad_inc = 0.2,
+                clear = true,
+                age = 20
+            })
+            add(g_obj_manager.p_objs, particle)
         end
     end,
 

@@ -13,6 +13,7 @@ level_fs = flowstate:new({
     timer_between_waves = 0,
     wave_queue_idx = 0,
 
+    enemies = {},
 
     add_wave = function(_ENV, x, y, rows, cols)
         add(wave_queue, { x, y, rows, cols })
@@ -23,7 +24,9 @@ level_fs = flowstate:new({
             x = x0 + i * 10
             for j = 1, col, 1 do
                 y = y0 + j * 10
-                add(g_obj_manager.g_objs, enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave }))
+                enemy = enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave })
+                add(enemies, enemy)
+                add(g_obj_manager.g_objs, enemy)
             end
         end
     end,
@@ -35,22 +38,13 @@ level_fs = flowstate:new({
         _ENV:add_wave(30, 30, 5, 5)
     end,
 
-    is_ready = function(_ENV)
-        local live_enemies = {}
-
-        for obj in all(g_obj_manager.g_objs) do
-            if obj.layer == LAYER_ENEMY then
-                add(live_enemies, obj)
+    is_ready_for_next_queue = function(_ENV)
+        for obj in all(enemies) do
+            if obj.active then
+                return false
             end
         end
-
-        -- Check if any enemies with the current wave number are still active
-        for obj in all(live_enemies) do
-            if obj.n_wave == n_wave and obj.active then
-                return false -- Enemies still exist, not ready for the next wave
-            end
-        end
-        return true -- All enemies defeated, ready for next wave
+        return true
     end,
 
     begin = function(_ENV)
@@ -78,13 +72,13 @@ level_fs = flowstate:new({
             timer_between_waves += g_dt
 
             -- Check if all waves have been spawned
-            if wave_queue_idx >= #wave_queue then
+            if wave_queue_idx >= #wave_queue and _ENV:is_ready_for_next_queue() then
                 n_wave += 1
                 state = LVL_ENTER
                 wave_queue = {}    -- Clear previous wave queue
                 wave_queue_idx = 0 -- Reset index
                 return
-            elseif _ENV:is_ready() then
+            elseif _ENV:is_ready_for_next_queue() then
                 wave_queue_idx += 1
                 local wave_desc = wave_queue[wave_queue_idx]
                 _ENV:spawn_wave(wave_desc[1], wave_desc[2], wave_desc[3], wave_desc[4])

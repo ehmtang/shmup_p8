@@ -57,7 +57,16 @@ end
 --     return dx * dx + dy * dy <= (b.rad + a.rad) ^ 2
 -- end
 
+-- a and b are gameobjects
 function aabb_intersect(a, b)
     return a.spr_x + a.spr_w >= b.spr_x and a.spr_x <= b.spr_x + b.spr_w and
         a.spr_y + a.spr_h >= b.spr_y and a.spr_y <= b.spr_y + b.spr_h
+end
+
+function lerp(a, b, t)
+    return a + (b - a) * t
+end
+
+function easeOutQuad(x)
+    return 1 - (1 - x) * (1 - x);
 end

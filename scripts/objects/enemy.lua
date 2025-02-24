@@ -176,3 +176,20 @@ enemy_obj = game_object:new({
         end
     end,
 })
+
+
+enemyA_obj = enemy_obj:new({
+    init = function(_ENV)
+        game_object:init()
+        spr_id = 21
+        anim_spd = 0.2
+        nframes = 4
+        name = "enemy"
+        rad = 10
+        spr_w = 8
+        spr_h = 8
+        layer = LAYER_ENEMY
+        mask = LAYER_PLAYER | LAYER_PLAYER_BULLET
+    end,
+})
+
