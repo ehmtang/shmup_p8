@@ -178,18 +178,35 @@ enemy_obj = game_object:new({
 })
 
 
-enemyA_obj = enemy_obj:new({
+enemyBoss_obj = enemy_obj:new({
     init = function(_ENV)
         game_object:init()
-        spr_id = 21
+        spr_id = 25
         anim_spd = 0.2
-        nframes = 4
-        name = "enemy"
+        nframes = 0
+        name = "enemyBoss"
         rad = 10
-        spr_w = 8
-        spr_h = 8
+        spr_w = 16
+        spr_h = 16
         layer = LAYER_ENEMY
-        mask = LAYER_PLAYER | LAYER_PLAYER_BULLET
+        mask = LAYER_PLAYER_BULLET
+        lives = 10
+    end,
+
+    draw = function(_ENV)
+        -- Apply flash effect only if this enemy is hit
+        if flash_time > 0 then
+            pal(3, 7)
+            pal(11, 7)
+        end
+
+        spr_x = pos_x
+        spr_y = pos_y
+        --rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
+
+        spr(spr_id + frame, pos_x, pos_y, 2,2)
+        -- Reset palette after drawing this enemy
+        pal()
     end,
 })
 

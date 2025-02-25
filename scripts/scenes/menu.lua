@@ -4,7 +4,7 @@ menu_fs = flowstate:new({
     select = 0,
 
     begin = function(_ENV)
-        flowstates = { easy_fs, normal_fs, hard_fs }
+        flowstates = { level_fs, normal_fs, hard_fs }
         select = 1
     end,
 

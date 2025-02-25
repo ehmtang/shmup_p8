@@ -15,27 +15,35 @@ level_fs = flowstate:new({
 
     enemies = {},
 
-    add_wave = function(_ENV, x, y, rows, cols)
-        add(wave_queue, { x, y, rows, cols })
+    add_wave = function(_ENV, x, y, rows, cols, type)
+        add(wave_queue, { x, y, rows, cols, type })
     end,
 
-    spawn_wave = function(_ENV, x0, y0, row, col)
-        for i = 1, row, 1 do
-            x = x0 + i * 10
-            for j = 1, col, 1 do
-                y = y0 + j * 10
-                enemy = enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave })
-                add(enemies, enemy)
-                add(g_obj_manager.g_objs, enemy)
+    spawn_wave = function(_ENV, x0, y0, row, col, type)
+        if type == enemy_obj then
+            for i = 1, row, 1 do
+                for j = 1, col, 1 do
+                    x = x0 + j * 10
+                    y = y0 + i * 10
+                    enemy = enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave })
+                    add(enemies, enemy)
+                    add(g_obj_manager.g_objs, enemy)
+                end
             end
+        elseif type == enemyBoss_obj then
+            enemy = enemyBoss_obj:new({ pos_x = x0, pos_y = y0, n_wave = n_wave })
+            add(enemies, enemy)
+            add(g_obj_manager.g_objs, enemy)
         end
     end,
 
+
     generate_wave_queue = function(_ENV)
         -- Add different waves
-        _ENV:add_wave(10, 10, 3, 3)
-        _ENV:add_wave(20, 20, 4, 4)
-        _ENV:add_wave(30, 30, 5, 5)
+        _ENV:add_wave(64, 10, 0, 0, enemyBoss_obj)
+        -- _ENV:add_wave(10, 10, 3, 3, enemy_obj)
+        -- _ENV:add_wave(20, 20, 4, 4, enemy_obj)
+        -- _ENV:add_wave(30, 30, 5, 5, enemy_obj)
     end,
 
     is_ready_for_next_queue = function(_ENV)
@@ -81,11 +89,19 @@ level_fs = flowstate:new({
             elseif _ENV:is_ready_for_next_queue() then
                 wave_queue_idx += 1
                 local wave_desc = wave_queue[wave_queue_idx]
-                _ENV:spawn_wave(wave_desc[1], wave_desc[2], wave_desc[3], wave_desc[4])
+                _ENV:spawn_wave(wave_desc[1], wave_desc[2], wave_desc[3], wave_desc[4], wave_desc[5])
             end
 
             -- Go to Game Over flowstate
             if player.lives <= 0 then
+                n_wave = 1
+                state = LVL_ENTER
+                enter_time = 0
+                wave_queue = {}
+                timer_between_waves = 0
+                wave_queue_idx = 0
+                enemies = {}
+
                 player.active = false
                 return gameover_fs
             end

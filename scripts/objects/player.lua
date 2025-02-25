@@ -42,7 +42,7 @@ player_obj = game_object:new({
         exh_frame_pos = 0
         exh_nframes = 5
         muzzle_r = 0
-        muzzle_rmax = 5
+        muzzle_rmax = 3
         lives = 4
         full_heart_spr = 14
         empty_heart_spr = 15
@@ -131,11 +131,11 @@ player_obj = game_object:new({
         else
             spr_id = 2
         end
-
-        --rectfill( spr_x, spr_y, spr_x + spr_w, spr_y+spr_h, 8 )
-
-        spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
-        spr(spr_id + frame, pos_x, pos_y)
+        
+        if not is_hit or sin(g_time * 5) < 0.2 then
+            spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
+            spr(spr_id + frame, pos_x, pos_y)
+        end
 
         -- muzzle flash
         if muzzle_r ~= 0 then
@@ -185,7 +185,7 @@ player_obj = game_object:new({
         local collisions = {}
         for i = 1, #g_obj_manager.g_objs do
             local g_obj = g_obj_manager.g_objs[i]
-        
+            
             -- Filter and check for collision in one pass
             if g_obj.layer and g_obj.active and canCollide(mask, g_obj.layer) and aabb_intersect(_ENV, g_obj) then
                 add(collisions, g_obj)

@@ -119,6 +119,10 @@ g_obj_manager = class:new({
                 del(p_objs, obj)
             end
         end
-
     end,
+
+    clear_all = function (_ENV)
+        g_objs = {}
+        p_objs = {}
+    end
 })
