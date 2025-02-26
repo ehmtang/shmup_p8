@@ -29,14 +29,14 @@ camera_obj = class:new({
             local progress = 1 - (shake_time / shake_duration)
             local easing_factor = easeOutQuad(progress)
 
-            local fx1 = cx1[1] * sin(cx1[2] * g_time + cx1[3])
-            local fx2 = cx2[1] * sin(cx2[2] * g_time + cx2[3])
-            local fx3 = cx3[1] * sin(cx3[2] * g_time + cx3[3])
+            local fx1 = cx1[1] * sin(cx1[2] * progress + cx1[3])
+            local fx2 = cx2[1] * sin(cx2[2] * progress + cx2[3])
+            local fx3 = cx3[1] * sin(cx3[2] * progress + cx3[3])
             offX = (fx1 + fx2 + fx3) * shake_amplitude * easing_factor
             
-            local fy1 = cy1[1] * sin(cy1[2] * g_time + cy1[3])
-            local fy2 = cy2[1] * sin(cy2[2] * g_time + cy2[3])
-            local fy3 = cy3[1] * sin(cy3[2] * g_time + cy3[3])
+            local fy1 = cy1[1] * sin(cy1[2] * progress + cy1[3])
+            local fy2 = cy2[1] * sin(cy2[2] * progress + cy2[3])
+            local fy3 = cy3[1] * sin(cy3[2] * progress + cy3[3])
             offY = (fy1 + fy2 + fy3) * shake_amplitude * easing_factor
         else
             offX, offY = 0, 0

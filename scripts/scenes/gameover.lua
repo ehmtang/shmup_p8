@@ -6,9 +6,9 @@ gameover_fs = flowstate:new({
 
     update = function(_ENV)
         if btnp(5) then
+            g_obj_manager:clear_all()
             return splash_fs
         end
-        g_obj_manager:clear_all()
         return nil
     end,
 

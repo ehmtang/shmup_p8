@@ -25,7 +25,14 @@ level_fs = flowstate:new({
                 for j = 1, col, 1 do
                     x = x0 + j * 10
                     y = y0 + i * 10
-                    enemy = enemy_obj:new({ pos_x = x, pos_y = y, n_wave = n_wave })
+                    
+                    enemy = enemy_obj:new({ 
+                        pos_x = x, 
+                        pos_y = y, 
+                        n_wave = n_wave,
+                        start_pos_x = x,
+                        start_pos_y = y + 64})
+
                     add(enemies, enemy)
                     add(g_obj_manager.g_objs, enemy)
                 end
@@ -40,10 +47,9 @@ level_fs = flowstate:new({
 
     generate_wave_queue = function(_ENV)
         -- Add different waves
-        _ENV:add_wave(64, 10, 0, 0, enemyBoss_obj)
-        -- _ENV:add_wave(10, 10, 3, 3, enemy_obj)
-        -- _ENV:add_wave(20, 20, 4, 4, enemy_obj)
-        -- _ENV:add_wave(30, 30, 5, 5, enemy_obj)
+        _ENV:add_wave(4, -58, 4, 10, enemy_obj)
+        _ENV:add_wave(4, -58, 4, 10, enemy_obj)
+        _ENV:add_wave(64, 1, 0, 0, enemyBoss_obj)
     end,
 
     is_ready_for_next_queue = function(_ENV)

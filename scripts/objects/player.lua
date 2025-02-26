@@ -214,29 +214,10 @@ player_obj = game_object:new({
             camera_obj:set_shake(0.5, 0.5)
 
             -- spark particles
-            for i = 1, 5 + rnd(5) do
-                local particle = particle_object:new({
-                    pos_x = pos_x + 4,
-                    pos_y = pos_y + 4,
-                    vel_x = rnd() - 0.5,
-                    vel_y = rnd() - 0.5,
-                    clr = 7,
-                    rad = 0,
-                })
-                add(g_obj_manager.p_objs, particle)
-            end
-
-            -- shockwave particle
-            local particle = particle_object:new({
-                pos_x = pos_x + 4,
-                pos_y = pos_y + 4,
-                clr = 7,
-                rad = 1 + rnd(2),
-                rad_inc = 0.2,
-                clear = true,
-                age = 20
-            })
-            add(g_obj_manager.p_objs, particle)
+            spark_particles(5, pos_x, pos_y)
+            
+            -- shockwave particles
+            shockwave_particles(pos_x, pos_y, 1+rnd(2), 20)
         end
     end,
 

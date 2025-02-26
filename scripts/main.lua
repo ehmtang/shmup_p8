@@ -3,6 +3,7 @@ global = _ENV
 -- Main function
 function _init()
     cls()
+    
     camera_obj:init()
     flowstate_manager:set_state(splash_fs)
 end
@@ -18,7 +19,7 @@ end
 
 -- Draw function
 function _draw()
-    cls(1)
+    cls()
     g_obj_manager:draw()
     flowstate_manager:draw_state()
 end

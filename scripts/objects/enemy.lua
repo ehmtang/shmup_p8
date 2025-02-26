@@ -1,7 +1,7 @@
-DEFAULT = 0
-HOMING = 1
-SINE_WAVE = 2
-TELEPORT = 3
+ENEM_DEFAULT = 0
+ENEM_HOMING = 1
+ENEM_SINE_WAVE = 2
+ENEM_TELEPORT = 3
 
 enemy_obj = game_object:new({
 
@@ -15,7 +15,12 @@ enemy_obj = game_object:new({
     fire_rate = 0.3,
     lives = 4,
     flash_time = 0,
-    pattern = DEFAULT,
+
+    start_pos_x = 0,
+    start_pos_y = 0,
+    
+    state = "enter",
+    pattern = ENEM_DEFAULT,
 
     init = function(_ENV)
         game_object:init()
@@ -31,7 +36,14 @@ enemy_obj = game_object:new({
     end,
 
     update = function(_ENV)
+        if state == "enter" then
+            _ENV:update_enter()
+        end
+
         fire_time += g_dt
+
+
+
 
         -- clamp velocities
         if ssqr(vel_x, vel_y) > max_vel * max_vel then
@@ -65,6 +77,14 @@ enemy_obj = game_object:new({
         pos_y += vel_y
 
         _ENV:resolve_collision()
+    end,
+
+    update_enter = function(_ENV)
+        local t = g_dt * 0.5
+    
+        pos_x = lerp(pos_x, start_pos_x, easeOutQuad(t))
+        pos_y = lerp(pos_y, start_pos_y, easeOutQuad(t))
+        
     end,
 
     draw = function(_ENV)
@@ -111,66 +131,24 @@ enemy_obj = game_object:new({
                 lives -= 1
                 flash_time = 3
 
+                -- create spark particles
+                spark_particles(5, pos_x, pos_y)
+
+                -- 1 in 3 chance
+                if flr(rnd(3)) + 1 == 1 then
+                    shockwave_particles(pos_x, pos_y)
+                end
+
                 if lives <= 0 then
                     sfx(2)
                     active = false
                     level_fs.score += 1
 
                     -- create explosion particles
-                    local colours = { 8, 9, 10, 11, 12, 13, 14, 15 }
-                    for i = 1, 10 + rnd(10) do
-                        local particle = particle_object:new({
-                            pos_x = pos_x + 4 + rnd(4),
-                            pos_y = pos_y + 4 + rnd(4),
-                            vel_x = rnd() - 0.5,
-                            vel_y = rnd() - 0.5,
-                            clr = rnd(colours),
-                            rad = rnd() * 3,
-                            age = rnd() * 5,
-                            rad_inc = 0.01
-                        })
-                        add(g_obj_manager.p_objs, particle)
-                    end
+                    explosion_particles(10, pos_x, pos_y)
 
                     -- create shockwave particle
-                    local particle = particle_object:new({
-                        pos_x = pos_x + 4,
-                        pos_y = pos_y + 4,
-                        clr = 7,
-                        rad = 5 + rnd(3),
-                        rad_inc = 0.2,
-                        clear = true,
-                        age = rnd(10)
-                    })
-                    add(g_obj_manager.p_objs, particle)
-                end
-
-                -- create spark particles
-                for i = 1, 5 + rnd(5) do
-                    local particle = particle_object:new({
-                        pos_x = pos_x + 4,
-                        pos_y = pos_y + 4,
-                        vel_x = rnd() - 0.5,
-                        vel_y = rnd() - 0.5,
-                        clr = 7,
-                        rad = 0,
-                    })
-                    add(g_obj_manager.p_objs, particle)
-                end
-
-                -- 1 in 3 chance
-                if flr(rnd(3)) + 1 == 1 then
-                    -- create shockwave particle
-                    local particle = particle_object:new({
-                        pos_x = pos_x + 4,
-                        pos_y = pos_y + 4,
-                        clr = 7,
-                        rad = 1 + rnd(2),
-                        rad_inc = 0.2,
-                        clear = true,
-                        age = 20
-                    })
-                    add(g_obj_manager.p_objs, particle)
+                    shockwave_particles(pos_x, pos_y, 5 + rnd(3), rnd(10))
                 end
             end
         end
@@ -204,9 +182,8 @@ enemyBoss_obj = enemy_obj:new({
         spr_y = pos_y
         --rectfill(spr_x, spr_y, spr_x + spr_w, spr_y + spr_h, 8)
 
-        spr(spr_id + frame, pos_x, pos_y, 2,2)
+        spr(spr_id + frame, pos_x, pos_y, 2, 2)
         -- Reset palette after drawing this enemy
         pal()
     end,
 })
-
