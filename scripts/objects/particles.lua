@@ -4,6 +4,11 @@ particle_object = game_object:new({
     age = 0,
     max_age = 30,
     rad_inc = 0,
+    name = "particle",
+
+    init = function (_ENV)
+        add(g_obj_manager.p_objs, _ENV)
+    end,
 
     update = function(_ENV)
         rad += rad_inc
@@ -32,7 +37,7 @@ particle_object = game_object:new({
 function explosion_particles(n, pos_x, pos_y)
     local colours = { 8, 9, 10, 11, 12, 13, 14, 15 }
     for i = 1, n + rnd(n) do
-        local particle = particle_object:new({
+        particle_object:new({
             pos_x = pos_x + 4 + rnd(4),
             pos_y = pos_y + 4 + rnd(4),
             vel_x = rnd() - 0.5,
@@ -42,13 +47,12 @@ function explosion_particles(n, pos_x, pos_y)
             age = rnd() * 5,
             rad_inc = 0.01
         })
-        add(g_obj_manager.p_objs, particle)
     end
 end
 
 function spark_particles(n, pos_x, pos_y)
     for i = 1, n + rnd(n) do
-        local particle = particle_object:new({
+        particle_object:new({
             pos_x = pos_x + 4,
             pos_y = pos_y + 4,
             vel_x = rnd() - 0.5,
@@ -56,12 +60,11 @@ function spark_particles(n, pos_x, pos_y)
             clr = 7,
             rad = 0,
         })
-        add(g_obj_manager.p_objs, particle)
     end
 end
 
 function shockwave_particles(pos_x, pos_y, _rad, _age)
-    local particle = particle_object:new({
+    particle_object:new({
         pos_x = pos_x + 4,
         pos_y = pos_y + 4,
         clr = 7,
@@ -70,5 +73,4 @@ function shockwave_particles(pos_x, pos_y, _rad, _age)
         clear = true,
         age = _age
     })
-    add(g_obj_manager.p_objs, particle)
 end

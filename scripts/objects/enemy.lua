@@ -18,7 +18,7 @@ enemy_obj = game_object:new({
 
     start_pos_x = 0,
     start_pos_y = 0,
-    
+
     state = "enter",
     pattern = ENEM_DEFAULT,
 
@@ -33,6 +33,7 @@ enemy_obj = game_object:new({
         spr_h = 8
         layer = LAYER_ENEMY
         mask = LAYER_PLAYER | LAYER_PLAYER_BULLET
+        add(g_obj_manager.enemy_objs, _ENV)
     end,
 
     update = function(_ENV)
@@ -75,16 +76,13 @@ enemy_obj = game_object:new({
         vel_y += acc_y
         pos_x += vel_x
         pos_y += vel_y
-
-        _ENV:resolve_collision()
     end,
 
     update_enter = function(_ENV)
         local t = g_dt * 0.5
-    
+
         pos_x = lerp(pos_x, start_pos_x, easeOutQuad(t))
         pos_y = lerp(pos_y, start_pos_y, easeOutQuad(t))
-        
     end,
 
     draw = function(_ENV)
@@ -105,51 +103,29 @@ enemy_obj = game_object:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        add(g_obj_manager.g_objs, e_bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2 }))
+        e_bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2 })
         fire_time = 0
     end,
 
-    resolve_collision = function(_ENV)
-        local collisions = {}
-        for i = 1, #g_obj_manager.g_objs do
-            local g_obj = g_obj_manager.g_objs[i]
+    resolve_collision = function(_ENV, other_obj)
+        if other_obj.layer == LAYER_PLAYER_BULLET then
+            sfx(1)
+            lives -= 1
+            flash_time = 3
 
-            -- Filter and check for collision in one pass
-            if g_obj.layer and g_obj.active and canCollide(mask, g_obj.layer) and aabb_intersect(_ENV, g_obj) then
-                add(collisions, g_obj)
+            spark_particles(5, pos_x, pos_y)
+
+            -- 1 in 3 chance
+            if flr(rnd(3)) + 1 == 1 then
+                shockwave_particles(pos_x, pos_y)
             end
-        end
 
-        for i = 1, #collisions do
-            local g_obj = collisions[i]
-            local l = g_obj.layer
-
-            -- collision with enemy bullets
-            if l == LAYER_PLAYER_BULLET then
-                sfx(1)
-                g_obj.active = false
-                lives -= 1
-                flash_time = 3
-
-                -- create spark particles
-                spark_particles(5, pos_x, pos_y)
-
-                -- 1 in 3 chance
-                if flr(rnd(3)) + 1 == 1 then
-                    shockwave_particles(pos_x, pos_y)
-                end
-
-                if lives <= 0 then
-                    sfx(2)
-                    active = false
-                    level_fs.score += 1
-
-                    -- create explosion particles
-                    explosion_particles(10, pos_x, pos_y)
-
-                    -- create shockwave particle
-                    shockwave_particles(pos_x, pos_y, 5 + rnd(3), rnd(10))
-                end
+            if lives <= 0 then
+                sfx(2)
+                active = false
+                level_fs.score += 1
+                explosion_particles(10, pos_x, pos_y)
+                shockwave_particles(pos_x, pos_y, 5 + rnd(3), rnd(10))
             end
         end
     end,

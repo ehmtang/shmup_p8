@@ -6,13 +6,12 @@ class = setmetatable(
             setmetatable(tbl, { __index = _ENV })
 
             -- Call init() if it exists
-            if tbl.init then
-                tbl:init()
-            end
-
+            if tbl.init then tbl:init() end
             return tbl
         end,
+
         init = function() end
+
     }, { __index = _ENV }
 )
 
@@ -59,36 +58,94 @@ game_object = class:new({
 })
 
 g_obj_manager = class:new({
-    g_objs = {},
     p_objs = {},
+    friend_objs = {},
+    pbullet_objs = {},
+    enemy_objs = {},
+    ebullet_objs = {},
 
     update = function(_ENV)
-        _ENV:delete_inactive()
-        foreach(g_objs, function(obj) obj:update() end)
+        _ENV:delete_inactive(p_objs)
+        _ENV:delete_inactive(friend_objs)
+        _ENV:delete_inactive(pbullet_objs)
+        _ENV:delete_inactive(enemy_objs)
+        _ENV:delete_inactive(ebullet_objs)
+
         foreach(p_objs, function(obj) obj:update() end)
+        foreach(friend_objs, function(obj) obj:update() end)
+
+
+        stop(#p_objs)
+
+
+        foreach(pbullet_objs, function(obj) obj:update() end)
+        foreach(enemy_objs, function(obj) obj:update() end)
+        foreach(ebullet_objs, function(obj) obj:update() end)
+        --_ENV:resolve_collision()
     end,
 
     draw = function(_ENV)
-        foreach(g_objs, function(obj) obj:draw() end)
         foreach(p_objs, function(obj) obj:draw() end)
+        foreach(friend_objs, function(obj) obj:draw() end)
+        foreach(pbullet_objs, function(obj) obj:draw() end)
+        foreach(enemy_objs, function(obj) obj:draw() end)
+        foreach(ebullet_objs, function(obj) obj:draw() end)
     end,
 
-    delete_inactive = function(_ENV)
-        for obj in all(g_objs) do
-            if not obj.active then
-                del(g_objs, obj)
-            end
-        end
-
-        for obj in all(p_objs) do
-            if not obj.active then
-                del(p_objs, obj)
+    delete_inactive = function(_ENV, tbl)
+        for i = #tbl, 1, -1 do 
+            if not tbl[i].active then
+                del(tbl, tbl[i])
             end
         end
     end,
 
     clear_all = function (_ENV)
-        g_objs = {}
         p_objs = {}
+        friend_objs = {}
+        pbullet_objs = {}
+        enemy_objs = {}
+        ebullet_objs = {}
+    end,
+
+    resolve_collision = function(_ENV)
+        -- Player bullets vs Enemies
+        for _, bullet in ipairs(pbullet_objs) do
+            if bullet.active then
+                for _, enemy in ipairs(enemy_objs) do
+                    if enemy.active and canCollide(bullet.mask, enemy.layer) and aabb_intersect(bullet, enemy) then
+                        stop()
+                        bullet:resolve_collision(enemy)
+                        enemy:resolve_collision(bullet)
+                    end
+                end
+            end
+        end
+    
+        -- Enemy bullets vs Friendly objects
+        for _, bullet in ipairs(ebullet_objs) do
+            if bullet.active then
+                for _, friend in ipairs(friend_objs) do
+                    if friend.active and canCollide(bullet.mask, friend.layer) and aabb_intersect(bullet, friend) then
+                        bullet:resolve_collision(friend)
+                        friend:resolve_collision(bullet)
+                    end
+                end
+            end
+        end
+    
+        -- Enemies vs Friendly objects
+        for _, enemy in ipairs(enemy_objs) do
+            if enemy.active then
+                for _, friend in ipairs(friend_objs) do
+                    if friend.active and canCollide(enemy.mask, friend.layer) and aabb_intersect(enemy, friend) then
+                        enemy:resolve_collision(friend)
+                        friend:resolve_collision(enemy)
+                    end
+                end
+            end
+        end
     end
+    
+    
 })

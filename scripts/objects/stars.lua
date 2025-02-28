@@ -1,8 +1,12 @@
 -- Stars derived from gameobject
-star = game_object:new({
+local star = game_object:new({
     spd = .5,
     rad = 0,
     clr = 7,
+
+    init = function (_ENV)
+        add(g_obj_manager.p_objs, _ENV)
+    end,
 
     update = function(_ENV)
         pos_y += spd
@@ -17,12 +21,12 @@ star = game_object:new({
     end
 })
 
-far_star = star:new({
+local far_star = star:new({
     spd = .25,
     rad = 0
 })
 
-near_star = star:new({
+local near_star = star:new({
     spd = .75,
     rad = 1,
 

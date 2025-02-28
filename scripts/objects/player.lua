@@ -4,7 +4,7 @@ player_obj = game_object:new({
     acc_rate = 0.2,
 
     fire_time = 0,
-    fire_period = 0.05,
+    fire_period = 0.2,
 
     exh_spr_id = 5,
     exh_anim_spd = 0.8,
@@ -50,6 +50,7 @@ player_obj = game_object:new({
         invulerable_time = 30
         layer = LAYER_PLAYER
         mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET)
+        add(g_obj_manager.friend_objs, _ENV)
     end,
 
     update = function(_ENV)
@@ -78,9 +79,9 @@ player_obj = game_object:new({
             mask = 0
 
             if invulerable_time <= 0 then
-               is_hit = false
-               mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET)
-               invulerable_time = 30
+                is_hit = false
+                mask = (LAYER_ENEMY | LAYER_ENEMY_BULLET)
+                invulerable_time = 30
             end
         end
 
@@ -118,8 +119,6 @@ player_obj = game_object:new({
         pos_x += vel_x
         pos_y += vel_y
 
-       _ENV:resolve_collision()
-
     end,
 
     draw = function(_ENV)
@@ -131,7 +130,7 @@ player_obj = game_object:new({
         else
             spr_id = 2
         end
-        
+
         if not is_hit or sin(g_time * 5) < 0.2 then
             spr(exh_spr_id + exh_frame, pos_x, pos_y + 8)
             spr(spr_id + frame, pos_x, pos_y)
@@ -162,7 +161,7 @@ player_obj = game_object:new({
         acc_x, acc_y = norm(acc_x, acc_y)
 
 
-        if btn(4) then
+        if btnp(4) then
             if fire_time > fire_period then
                 _ENV:shoot_bullet()
             end
@@ -171,7 +170,7 @@ player_obj = game_object:new({
 
     shoot_bullet = function(_ENV)
         sfx(0)
-        add(g_obj_manager.g_objs, bullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2, vel_y = -6 }))
+        pbullet_obj:new({ pos_x = pos_x, pos_y = pos_y - 2, vel_y = -6 })
         muzzle_r = muzzle_rmax
         fire_time = 0
     end,
@@ -181,44 +180,27 @@ player_obj = game_object:new({
         pos_y = mid(0, pos_y, g_scrn[2] - 8)
     end,
 
-    resolve_collision = function(_ENV)
-        local collisions = {}
-        for i = 1, #g_obj_manager.g_objs do
-            local g_obj = g_obj_manager.g_objs[i]
-            
-            -- Filter and check for collision in one pass
-            if g_obj.layer and g_obj.active and canCollide(mask, g_obj.layer) and aabb_intersect(_ENV, g_obj) then
-                add(collisions, g_obj)
-            end
+    resolve_collision = function(_ENV, other_obj)
+        if is_hit then
+            return
         end
 
-        for i = 1, #collisions do
-            local g_obj = collisions[i]
-            local l = g_obj.layer
+        -- collision with enemy
+        if other_obj.layer == LAYER_ENEMY then
+            sfx(1)
+            lives -= 1
+            is_hit = true
 
-            -- collision with enemy
-            if l == LAYER_ENEMY and not is_hit then
-                sfx(1)
-                g_obj.lives -= 1
-                lives -= 1
-                is_hit = true
-
-            -- collision with enemy bullets
-            elseif l == LAYER_ENEMY_BULLET and not is_hit then
-                sfx(1)
-                g_obj.active = false
-                lives -= 1
-                is_hit = true
-            end
-
-            camera_obj:set_shake(0.5, 0.5)
-
-            -- spark particles
-            spark_particles(5, pos_x, pos_y)
-            
-            -- shockwave particles
-            shockwave_particles(pos_x, pos_y, 1+rnd(2), 20)
+        -- collision with enemy bullets
+        elseif other_obj.layer == LAYER_ENEMY_BULLET then
+            sfx(1)
+            lives -= 1
+            is_hit = true
         end
+
+        camera_obj:set_shake(0.5, 0.5)
+        spark_particles(5, pos_x, pos_y)
+        shockwave_particles(pos_x, pos_y, 1 + rnd(2), 20)
     end,
 
 })

@@ -3,7 +3,6 @@ LVL_PLAY = 1
 
 level_fs = flowstate:new({
     title = "base",
-    player = player_obj:new(),
     spawn_rate_0 = 5,
     score = 0,
     n_wave = 1,
@@ -34,13 +33,11 @@ level_fs = flowstate:new({
                         start_pos_y = y + 64})
 
                     add(enemies, enemy)
-                    add(g_obj_manager.g_objs, enemy)
                 end
             end
         elseif type == enemyBoss_obj then
             enemy = enemyBoss_obj:new({ pos_x = x0, pos_y = y0, n_wave = n_wave })
             add(enemies, enemy)
-            add(g_obj_manager.g_objs, enemy)
         end
     end,
 
@@ -64,8 +61,7 @@ level_fs = flowstate:new({
     begin = function(_ENV)
         -- Initialize player and UI if required
         state = LVL_ENTER
-        add(g_obj_manager.g_objs, player)
-        player:init()
+        player_obj:init()
     end,
 
     update = function(_ENV)
@@ -99,7 +95,7 @@ level_fs = flowstate:new({
             end
 
             -- Go to Game Over flowstate
-            if player.lives <= 0 then
+            if player_obj.lives <= 0 then
                 n_wave = 1
                 state = LVL_ENTER
                 enter_time = 0
@@ -108,7 +104,7 @@ level_fs = flowstate:new({
                 wave_queue_idx = 0
                 enemies = {}
 
-                player.active = false
+                player_obj.active = false
                 return gameover_fs
             end
         end
@@ -129,10 +125,10 @@ level_fs = flowstate:new({
         print("score: " .. level_fs.score, 1, 1, 7)
 
         for i = 1, 4 do
-            if level_fs.player.lives >= i then
-                spr(level_fs.player.full_heart_spr, g_scrn[1] - i * 9, 1)
+            if player_obj.lives >= i then
+                spr(player_obj.full_heart_spr, g_scrn[1] - i * 9, 1)
             else
-                spr(level_fs.player.empty_heart_spr, g_scrn[1] - i * 9, 1)
+                spr(player_obj.empty_heart_spr, g_scrn[1] - i * 9, 1)
             end
         end
     end

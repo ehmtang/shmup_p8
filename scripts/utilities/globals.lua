@@ -49,7 +49,7 @@ end
 
 -- Check first object's mask with second object's layer
 function canCollide(mask, layer)
-    return mask & layer ~= 0
+    return (mask & layer) ~= 0
 end
 
 -- function circle_intersect(a, b)

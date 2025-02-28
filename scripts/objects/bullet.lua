@@ -1,4 +1,4 @@
-bullet_obj = game_object:new({
+pbullet_obj = game_object:new({
 
     init = function (_ENV)
         game_object:init()
@@ -9,6 +9,7 @@ bullet_obj = game_object:new({
         spr_h = 2
         layer = LAYER_PLAYER_BULLET
         mask = LAYER_ENEMY
+        add(g_obj_manager.pbullet_objs, _ENV)
     end,
 
     update = function(_ENV)
@@ -30,9 +31,25 @@ bullet_obj = game_object:new({
     draw = function(_ENV)
         spr(spr_id + frame, pos_x, pos_y)
     end,
+
+    resolve_collision = function(_ENV, other_obj)
+        if other_obj.layer == LAYER_ENEMY then
+            active = false
+        end
+    end
 })
 
-e_bullet_obj = bullet_obj:new({
+e_bullet_obj = pbullet_obj:new({
     layer = LAYER_ENEMY_BULLET,
     mask = LAYER_PLAYER,
+    
+    init = function (_ENV)
+        add(g_obj_manager.ebullet_objs, _ENV)    
+    end,
+
+    resolve_collision = function(_ENV, other_obj)
+        if other_obj.layer == LAYER_PLAYER then
+            active = false
+        end
+    end
 })
